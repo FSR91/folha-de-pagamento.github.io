@@ -139,54 +139,54 @@
               <tr>
                 <td>Salário Bruto</td>
                 <td>30</td>
-                <td>{{ salarioBase.toFixed(2) }}</td>
+                <td>{{ Number(salarioBase).toFixed(2) }}</td>
                 <td>-</td>
               </tr>
               <tr>
                 <td>Horas Extras 100%</td>
                 <td>{{ horaExtra100 }}</td>
-                <td>{{ valorHoraExtra100.toFixed(2) }}</td>
+                <td>{{ Number(valorHoraExtra100).toFixed(2) }}</td>
                 <td>-</td>
               </tr>
               <tr>
                 <td>Horas Extras 60%</td>
                 <td>{{ horaExtra60 }}</td>
-                <td>{{ valorHoraExtra60.toFixed(2) }}</td>
+                <td>{{ Number(valorHoraExtra60).toFixed(2) }}</td>
                 <td>-</td>
               </tr>
               <tr>
                 <td>Horas Extras 50%</td>
                 <td>{{ horaExtra50 }}</td>
-                <td>{{ valorHoraExtra50.toFixed(2) }}</td>
+                <td>{{ Number(valorHoraExtra50).toFixed(2) }}</td>
                 <td>-</td>
               </tr>
               <tr>
                 <td>DSR Hora Extra</td>
                 <td>{{ horaExtra100 + horaExtra50 + horaExtra60 }}</td>
-                <td>{{ dsrHoraExtra.toFixed(2) }}</td>
+                <td>{{ Number(dsrHoraExtra).toFixed(2) }}</td>
                 <td>-</td>
               </tr>
               <tr>
                 <td>Desconto INSS</td>
                 <td>-</td>
                 <td>-</td>
-                <td>{{ inssDesconto.toFixed(2) }}</td>
+                <td>{{ Number(inssDesconto).toFixed(2) }}</td>
               </tr>
               <tr>
                 <td>Desconto IRRF</td>
                 <td>-</td>
                 <td>-</td>
-                <td>{{ irrfDesconto.toFixed(2) }}</td>
+                <td>{{ Number(irrfDesconto).toFixed(2) }}</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
                 <th>Total Bruto</th>
-                <th colspan="3">{{ totalVencimentos.toFixed(2) }}</th>
+                <th colspan="3">{{ Number(totalVencimentos).toFixed(2) }}</th>
               </tr>
               <tr class="has-background-success-light">
                 <th>Total Líquido</th>
-                <th colspan="3">{{ totalLiquido.toFixed(2) }}</th>
+                <th colspan="3">{{ Number(totalLiquido).toFixed(2) }}</th>
               </tr>
             </tfoot>
           </table>
@@ -233,16 +233,22 @@
         },
         computed: {
           valorHoraNormal() {
-            return this.salarioBase / 220;
+            return this.salarioBase / 220 == NaN ? 0 : this.salarioBase / 220;
           },
           valorHoraExtra100() {
-            return this.valorHoraNormal * 2 * this.horaExtra100;
+            return this.valorHoraNormal * 2 * this.horaExtra100 == NaN
+              ? 0
+              : this.valorHoraNormal * 2 * this.horaExtra100;
           },
           valorHoraExtra60() {
-            return this.valorHoraNormal * 1.6 * this.horaExtra60;
+            return this.valorHoraNormal * 1.6 * this.horaExtra60 == NaN
+              ? 0
+              : this.valorHoraNormal * 1.6 * this.horaExtra60;
           },
           valorHoraExtra50() {
-            return this.valorHoraNormal * 1.5 * this.horaExtra50;
+            return this.valorHoraNormal * 1.5 * this.horaExtra50 == NaN
+              ? 0
+              : this.valorHoraNormal * 1.5 * this.horaExtra50;
           },
           dsrHoraExtra() {
             return isNaN(
@@ -260,13 +266,18 @@
                   this.dias_nao_uteis;
           },
           totalVencimentos() {
-            return (
-              this.salarioBase +
+            return this.salarioBase +
               this.valorHoraExtra100 +
               this.valorHoraExtra60 +
               this.valorHoraExtra50 +
-              this.dsrHoraExtra
-            );
+              this.dsrHoraExtra ==
+              NaN
+              ? 0
+              : this.salarioBase +
+                  this.valorHoraExtra100 +
+                  this.valorHoraExtra60 +
+                  this.valorHoraExtra50 +
+                  this.dsrHoraExtra;
           },
           inssDesconto() {
             const faixa = this.inssFaixas.find(
